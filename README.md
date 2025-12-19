@@ -1,97 +1,315 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Payslip Manager - React Native App
 
-# Getting Started
+A React Native application for viewing and managing payslips with search, filter, and download capabilities.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Features
 
-## Step 1: Start Metro
+- 📋 Browse payslips in a scrollable list
+- 🔍 Search by file type, extension, payslip ID, from date, or to date
+- 🔄 Sort by ID, from date, or to date (ascending/descending)
+- 📄 View detailed payslip information
+- 💾 Download payslip files using native file saver
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Prerequisites
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- Node.js >= 20
+- React Native development environment set up ([React Native Environment Setup](https://reactnative.dev/docs/environment-setup))
+- **For iOS:** macOS with Xcode 14+ and CocoaPods installed
+- **For Android:** Android Studio with SDK 31+
 
-```sh
-# Using npm
-npm start
+## Setup
 
-# OR using Yarn
-yarn start
+1. **Clone the repository and install dependencies:**
+
+```bash
+npm install
 ```
 
-## Step 2: Build and run your app
+2. **iOS Setup:**
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+```bash
+cd ios
+pod install
+cd ..
+```
 
-### Android
+3. **Android Setup:**
 
-```sh
-# Using npm
-npm run android
+No additional setup required. Gradle will handle dependencies automatically.
 
-# OR using Yarn
-yarn android
+## Running the App
+
+### Development Mode
+
+Start the Metro bundler:
+
+```bash
+npm start
 ```
 
 ### iOS
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+```bash
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+Or open `ios/PayslipSampleApp.xcworkspace` in Xcode and run from there.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+### Android
 
-## Step 3: Modify your app
+```bash
+npm run android
+```
 
-Now that you have successfully run the app, let's make changes!
+Or open the `android` folder in Android Studio and run from there.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Architecture & Design Decisions
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+### Hybrid Approach: Redux Toolkit + React Context
+***Redux Toolkit (@reduxjs/toolkit)***: Manages application data (payslips list, filters, search state).
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+Why: Predictable state management with Redux DevTools for debugging, time-travel, and state inspection.
+Trade-off: More boilerplate than Context API, but better suited for complex data flows and middleware integration for future scalability.
 
-## Congratulations! :tada:
 
-You've successfully run and modified your React Native App. :partying_face:
 
-### Now what?
+***React Context API***: Manages UI-level concerns (theme configuration, colors, spacing).
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+Why: Lightweight for UI preferences that don't need Redux's power. Avoids polluting Redux store with presentational logic.
+Trade-off: Performance concerns if theme updates frequently (mitigated by memoization and careful context structure).
 
-# Troubleshooting
+### Navigation
+- **React Navigation (Native Stack)**: Industry-standard navigation solution with native performance.
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
 
-# Learn More
+### UI Components
+- **FlatList**: Optimized for rendering large lists with built-in performance optimizations (virtualization, recycling).
+- **ScrollView**: For static vertical scroll integration used for sort filters.
+- **react-native-feather**: Lightweight icon library with consistent design language.
+- **Trade-off**: Custom icons might require additional libraries or assets.
 
-To learn more about React Native, take a look at the following resources:
+### File Management
+- **Native File Saver Module**: Platform-specific implementation for reliable file downloads.
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
+### Project Structure
+
+
+This project follows a **feature-oriented and layered architecture**, separating application concerns, reusable UI components, domain-specific logic, and platform services. The structure is designed for scalability, testability, and clear ownership of responsibilities.
+
+
+```
+src/
+├── app/          
+│   ├── navigation/   
+│   ├── state/     
+│   └── theme/      
+├── components/
+│   ├── BackButton/ 
+│   ├── Card/  
+│   ├── Label/  
+│   └── Line/     
+├── modules/              
+│   └── payslips 
+├── services/              
+│   └── fileSaver 
+├── utils/     
+│   dateConverters/         
+│   filters 
+├── Views/     
+│   ├── PayslipDetails
+│         └── Hooks
+│   └── PayslipList 
+│         ├── components 
+│         └── Hooks
+
+```
+
+---
+
+### `src/app/` – Application Core
+
+Houses application-wide configuration and infrastructure.
+
+
+```
+app/
+├── navigation/
+├── state/
+└── theme/
+```
+### `navigation/`
+
+- Defines the application navigation structure and routes.
+- Contains the main `AppNavigator` and strongly typed navigation definitions.
+- Serves as the central source of truth for screen registration.
+
+### `state/`
+- Global state configuration.
+- Redux store setup, middleware, and root reducers.
+- App-wide state concerns only (feature-specific state lives in `modules/`).
+
+### `theme/`
+- Theme management (colors, spacing, typography).
+- Provides theme context/providers and shared design tokens.
+
+---
+
+## `src/components/` – Shared UI Components
+
+Globally reusable, **presentation-only** components.
+```
+components/
+├── BackButton/
+├── Card/
+├── Label/
+└── Line/
+```
+
+Characteristics:
+- Stateless or minimally stateful
+- Feature-agnostic
+- No direct dependency on navigation or global state
+
+---
+
+## `src/modules/` – Domain / Feature Logic 
+
+Encapsulates **feature-specific business logic and state management**.
+
+```
+modules/
+└── payslips/
+```
+
+Contains:
+- Redux slices (reducers)
+- Selectors
+- Types and interfaces
+- Business rules related to the feature
+
+This separation keeps domain logic independent from UI concerns and simplifies testing.
+
+---
+
+## `src/services/` – Platform & External Services
+
+Handles interaction with native APIs, external SDKs, and system-level functionality.
+
+```
+services/
+└── fileSaver/
+```
+
+### `fileSaver/`
+- JavaScript wrapper around a native module (iOS / Android).
+- Responsible for saving bundled or generated files to the user’s device.
+- Abstracts platform differences behind a unified JS API.
+
+---
+
+## `src/utils/` – Shared Utilities
+
+Pure helper functions with no UI or state dependencies.
+
+```
+utils/
+├── dateConverters/
+└── filters/
+```
+
+### `dateConverters/`
+- Date formatting and conversion helpers.
+- Handles ISO strings, timestamps, and human-readable formats.
+
+### `filters/`
+- Reusable filtering logic.
+- Used across hooks and views for data transformation.
+
+---
+
+## `src/views/` – Screens & Feature UI
+
+Represents **application screens (routes)**.  
+Each view owns its UI composition and screen-specific logic.
+
+```
+views/
+├── PayslipDetails/
+│ └── hooks/
+└── PayslipList/
+├── components/
+└── hooks/
+```
+
+### `PayslipDetails/`
+- Screen responsible for displaying a single payslip.
+- Contains hooks specific to the details screen.
+
+### `PayslipList/`
+- Screen responsible for listing payslips.
+
+#### `components/`
+- Screen-scoped UI elements (e.g. search bar, sort bar, list item).
+- Not intended for global reuse.
+
+#### `hooks/`
+- Hooks encapsulating list-specific state and behavior.
+- Keeps screens lean and improves testability.
+
+---
+
+## Architectural Principles
+
+- **Separation of concerns**: UI, state, domain logic, and services are isolated.
+- **Feature ownership**: Feature logic resides in `modules/` and `views/`.
+- **Reusability**: Shared UI and utilities are centralized.
+- **Scalability**: New features can be added with minimal impact on existing code.
+
+### Key Technical Choices
+
+1. **TypeScript**: Type safety reduces runtime errors and improves developer experience.
+2. **Functional Components + Hooks**: Modern React patterns, better performance, cleaner code.
+3. **Redux Toolkit**: Reduces Redux boilerplate while maintaining predictability.
+4. **Safe Area Context**: Handles device notches and safe areas consistently across devices.
+
+### Trade-offs Made
+
+- **Redux vs Context API**: Redux adds overhead but provides better DevTools and middleware support for future features (API integration, persistence when needed).
+- **Native File Saver vs JS-only**: Native implementation requires platform-specific code but provides reliable file system access and better UX.
+- **FlatList vs SectionList**: FlatList is simpler for unsectioned data; SectionList could be used if grouping by date/month is needed.
+- **With more time** , better handle saving files by providing the user the ability to choose where to save the file, better error handling for native module, and more consitancy. 
+- **Missing nice to have** A file viewer feature was missed due to time limitations, it would've been implemented if not for the native module restriction. 
+
+## Testing
+
+```bash
+npm test
+```
+
+
+## Troubleshooting
+
+**Metro bundler cache issues:**
+```bash
+npm start -- --reset-cache
+```
+
+**iOS build issues:**
+```bash
+cd ios
+pod deintegrate
+pod install
+cd ..
+```
+
+**Android build issues:**
+```bash
+cd android
+./gradlew clean
+cd ..
+```
+
+## License
+
+Public
