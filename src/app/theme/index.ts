@@ -15,6 +15,7 @@ export const lightTheme: Theme = {
     body: { color: '#000000', fontSize: 12 },
     link: { color: '#007BFF', fontSize: 12, textDecorationLine: 'underline' },
     button: { color: '#d8d6d6ff', fontSize: 10, fontWeight: 'bold' },
+    error: { color: 'red', textDecorationLine: 'underline', fontSize: 18 },
   },
 };
 
@@ -33,5 +34,6 @@ export const darkTheme: Theme = {
     body: { color: '#FFFFFF', fontSize: 12 },
     link: { color: '#007BFF', fontSize: 12, textDecorationLine: 'underline' },
     button: { color: '#d8d6d6ff', fontSize: 10, fontWeight: 'bold' },
+    error: { color: 'red', textDecorationLine: 'underline', fontSize: 18 },
   },
 };

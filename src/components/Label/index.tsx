@@ -4,7 +4,7 @@ import { useTheme } from '../../app/theme/ThemeProvider';
 
 interface LabelProps {
   text: string;
-  type?: 'header' | 'subheader' | 'body' | 'link' | 'button';
+  type?: 'header' | 'subheader' | 'body' | 'link' | 'button' | 'error';
 }
 export const Label: React.FC<LabelProps> = ({ text, type = 'body' }) => {
   const {
@@ -21,6 +21,8 @@ export const Label: React.FC<LabelProps> = ({ text, type = 'body' }) => {
           ? textStyles?.link
           : type === 'button'
           ? textStyles?.button
+          : type === 'error'
+          ? textStyles?.error
           : textStyles?.body
       }
     >

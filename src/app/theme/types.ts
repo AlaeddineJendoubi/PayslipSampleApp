@@ -1,5 +1,5 @@
 import { TextStyle } from 'react-native';
-import { lightTheme } from './themes';
+import { lightTheme } from '.';
 
 export type Theme = {
   colors: {
@@ -16,6 +16,7 @@ export type Theme = {
     body?: TextStyle;
     link?: TextStyle;
     button?: TextStyle;
+    error?: TextStyle;
   };
 };
 
