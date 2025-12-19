@@ -3,8 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { RootStackParamList } from './types';
 import { useTheme } from '../theme/ThemeProvider';
-import { Paysliplist } from '../../Views/PayslipList';
 import { PayslipDetails } from '../../Views/PayslipDetails';
+import { PayslipsList } from '../../Views/PayslipList';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -28,7 +28,7 @@ export default function AppNavigator() {
       >
         <Stack.Screen
           name="PayslipsList"
-          component={Paysliplist}
+          component={PayslipsList}
           options={{ animation: 'slide_from_right' }}
         />
         <Stack.Screen name="PayslipsDetails" component={PayslipDetails} />
