@@ -10,6 +10,9 @@ A React Native application for viewing and managing payslips with search, filter
 - 📄 View detailed payslip information
 - 💾 Download payslip files using native file saver
 
+  ![Simulator Screen Recording - iPhone 17 - 2025-12-19 at 12 43 34](https://github.com/user-attachments/assets/fd5cdcb7-0283-4e05-aa20-068a21113141)
+
+
 ## Prerequisites
 
 - Node.js >= 20
