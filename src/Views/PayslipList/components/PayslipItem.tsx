@@ -2,10 +2,9 @@ import React from 'react';
 import { Card } from '../../../components/Card';
 import { Label } from '../../../components/Label';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Hash, Calendar, ArrowRight } from 'react-native-feather';
+import { Eye, Calendar, ArrowRight } from 'react-native-feather';
 import { useTheme } from '../../../app/theme/ThemeProvider';
 import { Payslip } from '../../../modules/payslips/types';
-import { Line } from '../../../components/Line';
 import { convertDateToReadableString } from '../../../utils/dateConverters';
 
 interface PayslipItemProps {
@@ -26,18 +25,9 @@ export const PayslipItem: React.FC<PayslipItemProps> = ({
   return (
     <TouchableOpacity onPress={onPress}>
       <Card>
-        <View style={styles.headerContainer}>
-          <View style={styles.subContainer}>
-            <Hash width={15} height={15} color={textStyles?.body?.color} />
-            <Label text="Payslip ID" type="body" />
-          </View>
-          <Label text={payslipData.id} type="body" />
-        </View>
-        <Line />
-
         <View style={styles.dataLineContainer}>
-          <Label text={` From: `} type="body" />
           <Calendar width={15} height={15} color={textStyles?.body?.color} />
+          <Label text={'Period'} type="body" />
           <Label text={` ${convertedFromDate}`} type="body" />
           <ArrowRight
             width={15}
@@ -45,11 +35,13 @@ export const PayslipItem: React.FC<PayslipItemProps> = ({
             color={textStyles?.body?.color}
             style={styles.iconStyle}
           />
-
-          <Label text={` To: `} type="body" />
-          <Calendar width={15} height={15} color={textStyles?.body?.color} />
-
           <Label text={` ${convertedToDate}`} type="body" />
+          <Eye
+            width={15}
+            height={15}
+            color={textStyles?.body?.color}
+            style={styles.iconStyle}
+          />
         </View>
       </Card>
     </TouchableOpacity>
