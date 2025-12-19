@@ -1,4 +1,4 @@
-import { NativeModules } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
 
 const { FileSaver } = NativeModules;
 
@@ -27,6 +27,17 @@ const FileSaverManager = {
     if (!fileName) {
       throw new Error('File name not provided');
     }
+    if (Platform.OS === 'ios') {
+      try {
+        const documentDirctory = await FileSaver.getDocumentsDirectory();
+
+        const path = await FileSaver.saveFile(fileName, documentDirctory);
+
+        return path;
+      } catch (error) {
+        throw error;
+      }
+    }
 
     try {
       const documentDirctory = await FileSaver.getDocumentsDirectory();
@@ -42,7 +53,6 @@ const FileSaverManager = {
         throw new Error('File already saved');
       }
     } catch (error) {
-      console.log('errr here', error);
       throw error;
     }
   },
