@@ -9,10 +9,11 @@ interface PayslipSortBarProps {
   setSortBy: (sortBy: SortByOptions) => void;
   testID?: string;
 }
-export const PayslipSortBar: FC<PayslipSortBarProps> = ({ setSortBy }) => {
+const UnMemoizedPayslipSortBar: FC<PayslipSortBarProps> = ({ setSortBy }) => {
   const {
     theme: { textStyles, colors },
   } = useTheme();
+
   return (
     <View style={styles.mainContainer}>
       <Filter width={20} height={20} color={textStyles?.body?.color} />
@@ -83,6 +84,8 @@ export const PayslipSortBar: FC<PayslipSortBarProps> = ({ setSortBy }) => {
     </View>
   );
 };
+
+export const PayslipSortBar = React.memo(UnMemoizedPayslipSortBar);
 
 const styles = StyleSheet.create({
   mainContainer: {
