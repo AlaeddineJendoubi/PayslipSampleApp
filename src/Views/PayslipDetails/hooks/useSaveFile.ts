@@ -9,7 +9,6 @@ export const useSaveFile = (fileName: string) => {
       const path = await FileSaverManager.saveBundledFile(fileName);
       setSavedPath(path);
     } catch (err) {
-      console.log('err', err);
       setError(String(err));
     }
   };
