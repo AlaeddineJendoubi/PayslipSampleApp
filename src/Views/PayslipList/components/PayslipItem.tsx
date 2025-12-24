@@ -49,22 +49,11 @@ export const PayslipItem: React.FC<PayslipItemProps> = ({
 };
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    opacity: 0.5,
-  },
-  subContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
   dataLineContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 5,
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
   },
   iconStyle: {
     marginHorizontal: 5,

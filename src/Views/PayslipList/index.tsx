@@ -6,16 +6,17 @@ import { PayslipSortBar } from './components/PayslipSortBar';
 import { PayslipsFlatList } from './components/PayslipsFlatlist';
 
 export const PayslipsList: React.FC = () => {
-  const { data, setFilter, setSortBy, hasValue } = useManagePayslips();
+  const { data, setFilter, setSortBy, hasValue, loadMore } =
+    useManagePayslips();
 
   const renderCount = useRef(0);
   renderCount.current += 1;
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <PayslipSearchBar setFilter={setFilter} hasValue={hasValue} />
       <PayslipSortBar setSortBy={setSortBy} />
-      <PayslipsFlatList payslips={data} />
+      <PayslipsFlatList payslips={data} loadMore={loadMore} />
     </View>
   );
 };

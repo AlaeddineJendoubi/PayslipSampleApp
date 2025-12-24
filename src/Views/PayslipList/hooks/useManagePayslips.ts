@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   ascFromDateFilter,
@@ -25,7 +25,18 @@ export const useManagePayslips = () => {
 
   const [filter, setFilterState] = useState<string>('');
   const [sortBy, setSortByState] = useState<SortByOptions>();
+  const [page, setPage] = useState<number>(1);
+
+  const setFilter = useCallback((value: string) => {
+    setFilterState(value);
+  }, []);
+
+  const setSortBy = useCallback((value: SortByOptions) => {
+    setSortByState(value);
+  }, []);
+
   const debouncedFilter = useDebounce(filter);
+
   const filteredAndSorted = useMemo(() => {
     if (debouncedFilter) {
       return payslipSearchFilter(payslipData, debouncedFilter);
@@ -48,18 +59,25 @@ export const useManagePayslips = () => {
     return payslipData;
   }, [payslipData, debouncedFilter, sortBy]);
 
-  const setFilter = useCallback((value: string) => {
-    setFilterState(value);
-  }, []);
+  const data = useMemo(() => {
+    return filteredAndSorted?.slice(0, page * 10);
+  }, [filteredAndSorted, page]);
 
-  const setSortBy = useCallback((value: SortByOptions) => {
-    setSortByState(value);
-  }, []);
+  const loadMore = useCallback(() => {
+    if (data.length < filteredAndSorted.length) {
+      setPage(p => p + 1);
+    }
+  }, [data.length, filteredAndSorted.length]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [filter, sortBy]);
 
   return {
-    data: filteredAndSorted,
+    data,
     setFilter,
     setSortBy,
     hasValue: filter?.length > 0,
+    loadMore,
   };
 };
