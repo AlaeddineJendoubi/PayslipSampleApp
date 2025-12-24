@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import {
   ascFromDateFilter,
@@ -11,6 +11,7 @@ import {
 } from '../../../utils/filters';
 import { useAppSelector } from '../../../app/state/hooks';
 import { selectPayslips } from '../../../modules/payslips/selectors';
+import { useDebounce } from '../../../hooks/useDebounce';
 export type SortByOptions =
   | 'toDateASC'
   | 'toDateDESC'
@@ -22,15 +23,14 @@ export type SortByOptions =
 export const useManagePayslips = () => {
   const payslipData = useAppSelector(selectPayslips);
 
-  const [filter, setFilter] = useState<string>('');
-  const [sortBy, setSortBy] = useState<SortByOptions>();
-
+  const [filter, setFilterState] = useState<string>('');
+  const [sortBy, setSortByState] = useState<SortByOptions>();
+  const debouncedFilter = useDebounce(filter);
   const filteredAndSorted = useMemo(() => {
-    if (filter) {
-      console.log('Applying search filter:', filter);
-      return payslipSearchFilter(payslipData, filter);
+    if (debouncedFilter) {
+      return payslipSearchFilter(payslipData, debouncedFilter);
     }
-    console.log('sortBy', sortBy);
+
     if (sortBy === 'fromDateASC') {
       return ascFromDateFilter(payslipData);
     } else if (sortBy === 'fromDateDESC') {
@@ -46,7 +46,20 @@ export const useManagePayslips = () => {
     }
 
     return payslipData;
-  }, [payslipData, filter, sortBy]);
+  }, [payslipData, debouncedFilter, sortBy]);
 
-  return { data: filteredAndSorted, setFilter, setSortBy, filter };
+  const setFilter = useCallback((value: string) => {
+    setFilterState(value);
+  }, []);
+
+  const setSortBy = useCallback((value: SortByOptions) => {
+    setSortByState(value);
+  }, []);
+
+  return {
+    data: filteredAndSorted,
+    setFilter,
+    setSortBy,
+    hasValue: filter?.length > 0,
+  };
 };
